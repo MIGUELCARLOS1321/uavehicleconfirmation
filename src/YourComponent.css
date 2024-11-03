@@ -1,0 +1,184 @@
+/* Overall container styling */
+body {
+  background-image: url('./background.jpg'); /* Adjust the path if needed */
+  background-size: cover; /* Scale image to cover the screen */
+  background-repeat: no-repeat;
+  background-attachment: fixed; /* Make the background stay in place when scrolling */
+  background-position: center;
+  color: #ffffff;
+  font-family: Arial, sans-serif;
+  margin: 0;
+}
+
+.lookup-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px 20px; /* Removed top padding */
+  background-color: rgba(12, 6, 76, 0.85); /* Semi-transparent overlay */
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #ffffff;
+}
+
+.top-image {
+  width: 20%; /* Ensure it spans the full width */
+  height: auto;
+  display: block;
+}
+
+/* Search bar styling */
+.search-bar {
+  width: 100%;
+  padding: 20px;
+  text-align: center;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.search-bar input[type="text"] {
+  width: 70%; /* Adjust width to be more responsive */
+  padding: 10px;
+  margin-right: 10px;
+  border: 1px solid #ccc; /* Retaining a lighter border for visibility */
+  border-radius: 4px;
+  font-size: 16px;
+  color: #000; /* Input text color */
+}
+
+.search-bar button {
+  padding: 10px 15px;
+  background-color: #007bff; /* Button background color */
+  color: white; /* Button text color */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.search-bar button:hover {
+  background-color: #0056b3; /* Darker button color on hover */
+}
+
+/* Container for columns */
+.columns-container {
+  display: flex;
+  flex-direction: column; /* Stack columns on small screens */
+  gap: 20px; /* Adjust gap as needed */
+}
+
+/* Left and right columns styling */
+.left-column {
+  padding: 20px;
+  border-radius: 8px;
+  width: 100%; /* Full width on small screens */
+}
+
+.right-column {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%; /* Full width on small screens */
+}
+
+/* Information display styling */
+.info-display {
+  text-align: left;
+}
+
+/* Modal styling */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal img {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 8px;
+}
+
+/* Right column image styling */
+.image-wrapper {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.info-image {
+  width: 100px; /* Smaller image size for mobile */
+  height: auto;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.info-image:hover {
+  transform: scale(1.10); /* Slight zoom on hover */
+}
+
+/* Image label styling */
+.image-label {
+  margin-top: 5px;
+  font-size: 14px;
+  color: #ffffff; /* Set label color to white */
+}
+
+.confirm-button {
+  padding: 10px 20px;
+  background-color: #28a745; /* Green background */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  margin: 20px 0; /* Spacing above and below */
+}
+
+.confirm-button:hover {
+  background-color: #218838; /* Darker green on hover */
+}
+
+/* Styling for the sticker number input */
+.sticker-input {
+  width: 50%;
+  padding: 10px;
+  margin: 10px 0; /* Spacing above and below */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  color: #000; /* Input text color */
+}
+
+/* Media Queries for responsiveness */
+@media (min-width: 600px) {
+  .columns-container {
+    flex-direction: row; /* Display columns side by side on larger screens */
+  }
+
+  .left-column, .right-column {
+    width: calc(50% - 20px); /* 50% width with some spacing */
+  }
+}
+
+@media (max-width: 600px) {
+  .search-bar input[type="text"] {
+    width: 80%; /* More space for input on smaller screens */
+  }
+
+  .info-image {
+    width: 80px; /* Adjust image size for smaller screens */
+  }
+  
+  .top-image {
+    width: 30%; /* Shrink top image for mobile screens */
+  }
+}
