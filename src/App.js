@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
-import PocketBase from 'pocketbase';
+import { db } from './firebase/firebase'; 
+import { collection, query, where, getDocs, addDoc } from 'firebase/firestore';
 import './YourComponent.css';
 import UAvehicle from './UAvehicle.png';
 
-const pb = new PocketBase('http://127.0.0.1:8090');
-
 const collectionLabels = {
-  '4wheelsinformation': '4 Wheels Information',
-  'pickanddropinformation': 'Pick and Drop Information',
-  'serviceinformation': 'Service Information',
-  'For2WheelVehicle': 'For 2-Wheel Vehicle Information'
+  parkingfourwheel: '4 Wheels Information',
+  parkingtwowheel: '2 Wheels Information',
+  pickndrop: 'Pick and Drop Information',
+  parkingservice: 'Service Information',
 };
 
 function LicenseLookup() {
@@ -28,12 +27,12 @@ function LicenseLookup() {
     setIsLoading(true);
 
     try {
-      const collections = ['4wheelsinformation', 'pickanddropinformation', 'serviceinformation', 'For2WheelVehicle'];
-      const requests = collections.map((collection) =>
-        pb.collection(collection).getFullList({
-          filter: `licenseNumber="${licenseNumber}"`,
-        }).then(records => records.map(record => ({ ...record, collection })))
-      );
+      const collections = ['parkingfourwheel', 'parkingtwowheel', 'pickndrop', 'parkingservice'];
+      const requests = collections.map(async (collectionName) => {
+        const q = query(collection(db, collectionName), where("licenseNumber", "==", licenseNumber));
+        const querySnapshot = await getDocs(q);
+        return querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id, collection: collectionName }));
+      });
 
       const results = await Promise.all(requests);
       const allRecords = results.flat().filter(record => record);
@@ -72,15 +71,6 @@ function LicenseLookup() {
     setStickerWarning('');
     if (info && stickerNumber >= '001' && stickerNumber <= '999') {
       try {
-        const existingRecords = await pb.collection('confirmedInformation').getFullList({
-          filter: `stickerNumber="${stickerNumber}"`,
-        });
-
-        if (existingRecords.length > 0) {
-          setStickerWarning(`Sticker number ${stickerNumber} is already taken by another vehicle.`);
-          return;
-        }
-
         const confirmedData = {
           fullName: info.fullName || '',
           address: info.address || '',
@@ -92,13 +82,16 @@ function LicenseLookup() {
           registrationNumber: info.registrationNumber || '',
           receiptNumber: info.receiptNumber || '',
           stickerNumber: stickerNumber,
-          driverLicenseImage: `http://127.0.0.1:8090/api/files/${info.collection}/${info.id}/${info.driverLicenseImage}`,
-          ltoRegistrationImage: `http://127.0.0.1:8090/api/files/${info.collection}/${info.id}/${info.ltoRegistrationImage}`,
-          ltoReceiptImage: `http://127.0.0.1:8090/api/files/${info.collection}/${info.id}/${info.ltoReceiptImage}`,
-          carImage: `http://127.0.0.1:8090/api/files/${info.collection}/${info.id}/${info.carImage}`
+          driverLicenseImage: info.driverLicenseImage,
+          ltoRegistrationImage: info.ltoRegistrationImage,
+          ltoReceiptImage: info.ltoReceiptImage,
+          carImage: info.carImage,
+          confirmedAt: new Date()  // Optional field to store confirmation timestamp
         };
 
-        await pb.collection('confirmedInformation').create(confirmedData);
+        // Add the confirmed data to the Firestore collection
+        await addDoc(collection(db, 'confirmedData'), confirmedData);
+
         alert('Information confirmed and saved successfully!');
       } catch (err) {
         console.error('Error saving confirmed information:', err);
@@ -135,15 +128,10 @@ function LicenseLookup() {
               <h2>Information Found:</h2>
               <p><b>Database Source:</b> {collectionLabels[info.collection]}</p>
               <p><b>Full Name:</b> {info.fullName}</p>
-              <p><b>Student Number:</b> {info.studentNumber}</p>
-              <p><b>Role:</b> {info.role}</p>
               <p><b>Address:</b> {info.address}</p>
               <p><b>Contact Number:</b> {info.contactNumber}</p>
               <p><b>License Number:</b> {info.licenseNumber}</p>
               <p><b>Expiry Date:</b> {info.expiryDate}</p>
-              <p><b>Vehicle Brand:</b> {info.vehicleBrand}</p>
-              <p><b>Vehicle Type:</b> {info.vehicleType}</p>
-              <p><b>Vehicle Color:</b> {info.vehicleColor}</p>
               <p><b>Registered Owner:</b> {info.registeredOwner}</p>
               <p><b>Plate Number:</b> {info.plateNumber}</p>
               <p><b>Registration Number:</b> {info.registrationNumber}</p>
@@ -158,10 +146,10 @@ function LicenseLookup() {
               {info.driverLicenseImage && (
                 <div className="image-wrapper">
                   <img
-                    src={`http://127.0.0.1:8090/api/files/${info.collection}/${info.id}/${info.driverLicenseImage}`}
+                    src={info.driverLicenseImage}
                     alt="Driver's License"
                     className="info-image"
-                    onClick={() => openModal(`http://127.0.0.1:8090/api/files/${info.collection}/${info.id}/${info.driverLicenseImage}`)}
+                    onClick={() => openModal(info.driverLicenseImage)}
                   />
                   <div className="image-label"><b>Driver's License</b></div>
                 </div>
@@ -169,10 +157,10 @@ function LicenseLookup() {
               {info.ltoRegistrationImage && (
                 <div className="image-wrapper">
                   <img
-                    src={`http://127.0.0.1:8090/api/files/${info.collection}/${info.id}/${info.ltoRegistrationImage}`}
+                    src={info.ltoRegistrationImage}
                     alt="LTO Registration"
                     className="info-image"
-                    onClick={() => openModal(`http://127.0.0.1:8090/api/files/${info.collection}/${info.id}/${info.ltoRegistrationImage}`)}
+                    onClick={() => openModal(info.ltoRegistrationImage)}
                   />
                   <div className="image-label"><b>LTO Registration</b></div>
                 </div>
@@ -180,10 +168,10 @@ function LicenseLookup() {
               {info.ltoReceiptImage && (
                 <div className="image-wrapper">
                   <img
-                    src={`http://127.0.0.1:8090/api/files/${info.collection}/${info.id}/${info.ltoReceiptImage}`}
+                    src={info.ltoReceiptImage}
                     alt="LTO Receipt"
                     className="info-image"
-                    onClick={() => openModal(`http://127.0.0.1:8090/api/files/${info.collection}/${info.id}/${info.ltoReceiptImage}`)}
+                    onClick={() => openModal(info.ltoReceiptImage)}
                   />
                   <div className="image-label"><b>LTO Receipt</b></div>
                 </div>
@@ -191,10 +179,10 @@ function LicenseLookup() {
               {info.carImage && (
                 <div className="image-wrapper">
                   <img
-                    src={`http://127.0.0.1:8090/api/files/${info.collection}/${info.id}/${info.carImage}`}
+                    src={info.carImage}
                     alt="Car"
                     className="info-image"
-                    onClick={() => openModal(`http://127.0.0.1:8090/api/files/${info.collection}/${info.id}/${info.carImage}`)}
+                    onClick={() => openModal(info.carImage)}
                   />
                   <div className="image-label"><b>Car Image</b></div>
                 </div>
