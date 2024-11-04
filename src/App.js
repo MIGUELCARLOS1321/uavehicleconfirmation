@@ -6,7 +6,7 @@ import UAvehicle from './UAvehicle.png';
 
 const collectionLabels = {
   parkingfourwheel: '4 Wheels Information',
-  parkingtwowheel: '2 Wheels Information',
+  parkingtwovehicle: '2 Wheels Information',
   pickndrop: 'Pick and Drop Information',
   parkingservice: 'Service Information',
 };
@@ -27,7 +27,7 @@ function LicenseLookup() {
     setIsLoading(true);
 
     try {
-      const collections = ['parkingfourwheel', 'parkingtwowheel', 'pickndrop', 'parkingservice'];
+      const collections = ['parkingfourwheel', 'parkingtwovehicle', 'pickndrop', 'parkingservice'];
       const requests = collections.map(async (collectionName) => {
         const q = query(collection(db, collectionName), where("licenseNumber", "==", licenseNumber));
         const querySnapshot = await getDocs(q);
