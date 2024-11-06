@@ -14,7 +14,14 @@
   margin-bottom: 20px; /* Space below the title */
   color: #0C064C; /* Dark blue color for the title */
 }
+.edit-button {
+  background-color: #4CAF50; /* Green */
+  color: white;
+}
 
+.edit-button:hover {
+  background-color: #45a049; /* Darker green */
+}
 /* Form styling */
 form {
   display: flex;

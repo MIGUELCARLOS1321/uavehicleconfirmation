@@ -51,6 +51,10 @@ function LicenseLookup() {
     }
   };
 
+  const handleEdit = () => {
+    window.location.href = 'https://uavehicleinformation.vercel.app';
+  };
+
   const openModal = (imageSrc) => {
     setModalImage(imageSrc);
     setModalActive(true);
@@ -89,7 +93,6 @@ function LicenseLookup() {
           confirmedAt: new Date()  // Optional field to store confirmation timestamp
         };
 
-        // Add the confirmed data to the Firestore collection
         await addDoc(collection(db, 'confirmedData'), confirmedData);
 
         alert('Information confirmed and saved successfully!');
@@ -115,7 +118,8 @@ function LicenseLookup() {
             placeholder="Enter License Number"
             required
           />
-          <button type="submit">Search</button>
+          <button type="submit">Search</button>&nbsp;&nbsp;
+          <button type="button" className="edit-button" onClick={handleEdit}>Edit</button>
         </form>
         {error && <p className="error">{error}</p>}
         {isLoading && <p>Loading...</p>}
