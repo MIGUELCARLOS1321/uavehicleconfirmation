@@ -20,6 +20,18 @@ function LicenseLookup() {
   const [modalActive, setModalActive] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [stickerWarning, setStickerWarning] = useState('');
+  const [stickerTakenWarning, setStickerTakenWarning] = useState('');
+
+  const checkStickerNumber = async (stickerNumber) => {
+    try {
+      const q = query(collection(db, 'confirmedData'), where("stickerNumber", "==", stickerNumber));
+      const querySnapshot = await getDocs(q);
+      return querySnapshot.docs.length > 0; // Returns true if sticker number is taken
+    } catch (err) {
+      console.error('Error checking sticker number:', err);
+      return false;
+    }
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -73,6 +85,15 @@ function LicenseLookup() {
 
   const handleConfirm = async () => {
     setStickerWarning('');
+    setStickerTakenWarning('');
+
+    // Check if sticker number is already taken
+    const isTaken = await checkStickerNumber(stickerNumber);
+    if (isTaken) {
+      setStickerTakenWarning('This sticker number is taken by another vehicle');
+      return; // Prevent further action if the sticker number is taken
+    }
+
     if (info && stickerNumber >= '001' && stickerNumber <= '999') {
       try {
         const confirmedData = {
@@ -208,12 +229,14 @@ function LicenseLookup() {
           />
           <button className="confirm-button" onClick={handleConfirm}>Confirm</button>
           {stickerWarning && <p className="sticker-warning">{stickerWarning}</p>}
+          {stickerTakenWarning && <p className="sticker-warning">{stickerTakenWarning}</p>}
         </>
       )}
 
       {modalActive && (
         <div className="modal" onClick={handleOutsideClick}>
           <div className="modal-content">
+            <span className="close" onClick={closeModal}>&times;</span>
             <img src={modalImage} alt="Modal" className="modal-image" />
           </div>
         </div>
