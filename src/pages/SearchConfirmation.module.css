@@ -1,0 +1,374 @@
+*{
+    box-sizing: border-box;
+}
+
+.container{
+    height: 100vh;
+    width: 100%;
+    background-image: url(../newbackground.png);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.mainCard{
+    background-color: white;
+    width: 60em;
+    padding: 1rem;
+    height: 35em;
+    border-radius: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    position: relative;
+}
+
+.navSearch{
+    z-index: 2;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-color: #00bf63;
+    padding: .5rem 1rem;
+    border-radius: 5px;
+    margin: 1rem;
+    cursor: pointer;
+}
+
+.leftCard{
+    width: 25%;
+    height: 100%;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    color: white;
+    align-items: center;
+}
+
+.rightCard{
+    width: 75%;
+    height: 100%;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    color: white;
+    gap: .5rem;
+}
+
+.ualogo{
+    width: 8rem;
+    height: 8rem;
+}
+
+.logoTitle{
+    color: #012366;
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.admin{
+    color: #012366;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.searchHolder{
+    width: 100%;
+    height: 3rem;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: row;
+    gap: .5rem;
+}
+
+.inputBar{
+    width: 80%;
+    padding: 1rem;
+    border: 1px solid grey;
+    border-radius: .5rem;
+}
+
+.checkButton{
+    width: 20%;
+    background-color: #00bf63;
+    border-radius: .5rem;
+    display: flex;
+    color: white;
+    justify-content: center;
+    align-items: center;
+
+    border: none;
+}
+
+.detailsHolder{
+    width: 100%;
+    height: 80%;
+    border: 3px solid grey;
+    border-radius: 8px;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.toSearchButton{
+    padding: 1rem;
+    background-color: #00bf63;
+    border-radius: .5rem;
+    display: flex;
+    color: white;
+    justify-content: center;
+    align-items: center;
+}
+
+.infoHolder{
+    width: 65%;
+    height: 80%;
+    color: black;
+}
+
+.assignBar{
+    width: 70%;
+    padding: 1rem;
+    border: 1px solid grey;
+    border-radius: .5rem;
+}
+
+.picturesHolder{
+    width: 35% ;
+    height: 80%;
+    gap: 1rem;
+    flex-wrap: wrap;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: auto;
+
+}
+
+.imgCard{
+    width: 5.5em;
+    height: 5.5em;
+    border-radius: 5px;
+    background-color: grey;
+    cursor: pointer;
+    object-fit: cover;
+
+    transition: scale 0.3s ease-in-out;
+}
+
+.imgCard:hover{
+    scale: 1.03;
+}
+
+.infoFunction{
+    display: flex;
+    width: 100%;
+    height: 20%;
+    align-items: center;
+    gap: 1rem;
+}
+
+.holdButton{
+    padding: 1rem;
+    background-color: #012366;
+    border-radius: .5rem;
+    display: flex;
+    color: white;
+    justify-content: center;
+    align-items: center;
+}
+
+.editButton{
+    padding: 1rem;
+    background-color: #004aad;
+    border-radius: .5rem;
+    display: flex;
+    color: white;
+    justify-content: center;
+    align-items: center;
+}
+
+.imageViewer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.viewerContent {
+    position: relative;
+}
+
+.viewerImage {
+    max-width: 40em;
+    max-height: 40em;
+    border-radius: 10px;
+}
+
+.closeButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #012366;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.editFucntion{
+    position: absolute;
+    z-index: 1000;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.editModalBackdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.editModal {
+    color: black;
+    background-color: white;
+    padding: 20px;
+    height: 30em;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 600px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1001;
+    overflow: auto;
+}
+
+.editModal h2 {
+    margin-bottom: 20px;
+}
+
+.modalField {
+    margin-bottom: 15px;
+}
+
+.modalField label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.modalField input {
+    width: 100%;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.modalActions {
+    display: flex;
+    justify-content: space-between;
+}
+
+.saveButton, .cancelButton {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.saveButton {
+    background-color: #28a745;
+    color: white;
+}
+
+.cancelButton {
+    background-color: #dc3545;
+    color: white;
+}
+
+.reset{
+    position: absolute;
+    padding: 10px 15px;
+    background-color: darkred;
+    bottom: 0;    
+    left: 0;
+    border-radius: 5px;
+    margin: 1rem;
+}
+.reset, .navSearch, .checkButton, .holdButton, .editButton {
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+
+.reset:active, .navSearch:active, .checkButton:active, .holdButton:active, .editButton:active {
+    transform: scale(0.95);
+}
+
+.modalBackdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modalContent {
+    background: white;
+    color: black;
+    border-radius: 8px;
+    padding: 1rem;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.modalActions {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+.confirmButton, .cancelButton {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.confirmButton {
+    background-color: #d9534f;
+    color: white;
+}
+
+.cancelButton {
+    background-color: #5bc0de;
+    color: white;
+}
+
+.confirmButton:hover, .cancelButton:hover {
+    opacity: 0.9;
+}
