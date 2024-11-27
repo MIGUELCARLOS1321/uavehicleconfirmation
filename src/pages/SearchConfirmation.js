@@ -2,7 +2,7 @@ import styles from "./SearchConfirmation.module.css";
 import UAlogo from "../UAlogo.png";
 import { useState } from 'react';
 import { db } from '../firebase/firebase'; 
-import { collection, query, where, getDocs, doc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { collection, query, where, getDocs, doc, updateDoc, deleteDoc, deleteField } from 'firebase/firestore';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from "react-router-dom";
@@ -18,6 +18,7 @@ export default function SearchConfirmation() {
     const [isResetModalOpen, setIsResetModalOpen] = useState(false);
     const [editedDocumentData, setEditedDocumentData] = useState(null); // To store edited data
     const [selectedImage, setSelectedImage] = useState(null);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // Track if delete modal is open
 
     const handleSearch = async (e) => {
         e.preventDefault();
@@ -69,6 +70,21 @@ export default function SearchConfirmation() {
             } catch (error) {
                 console.error("Error updating document: ", error);
                 toast.error("Failed to unhold document.");
+            }
+        }
+    };
+
+    const handleDelete = async () => {
+        if (currentDocID) {
+            try {
+                const docRef = doc(db, "confirmedData", currentDocID);
+                await deleteDoc(docRef); // Delete the document
+                toast.success("Document deleted successfully.");
+                setIsDeleteModalOpen(false); // Close the modal after deletion
+                setInfoFound(false); // Optionally, clear the displayed data
+            } catch (error) {
+                console.error("Error deleting document: ", error);
+                toast.error("Failed to delete document.");
             }
         }
     };
@@ -137,7 +153,7 @@ export default function SearchConfirmation() {
             const usersSnapshot = await getDocs(usersCollectionRef);
     
             const updatePromises = usersSnapshot.docs.map((doc) =>
-                updateDoc(doc.ref, { registeredFor: "" }) // Clear the field
+                updateDoc(doc.ref, { registeredfor: "" }) // Clear the field
             );
     
             await Promise.all(updatePromises);
@@ -147,6 +163,15 @@ export default function SearchConfirmation() {
             console.error("Error resetting collections or clearing 'registeredFor' field: ", error);
             toast.error("Failed to reset collections or clear 'registeredFor' fields.");
         }
+    };
+
+    const openDeleteModal = () => {
+        setIsDeleteModalOpen(true);
+    };
+
+    // Close the delete modal
+    const closeDeleteModal = () => {
+        setIsDeleteModalOpen(false);
     };
     
 
@@ -219,6 +244,12 @@ export default function SearchConfirmation() {
                                             onClick={handleEdit}
                                         >
                                             Edit
+                                        </div>
+                                        <div 
+                                            className={styles.deleteButton} 
+                                            onClick={openDeleteModal}
+                                        >
+                                            Delete
                                         </div>
                                     </div>
                                 </>
@@ -349,6 +380,30 @@ export default function SearchConfirmation() {
                                 <button type="button" onClick={handleModalClose} className={styles.cancelButton}>Cancel</button>
                             </div>
                         </form>
+                    </div>
+                </div>
+            )}
+            {isDeleteModalOpen && (
+                <div className={styles.modalBackdrop} onClick={closeDeleteModal}>
+                    <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+                        <h3>Warning</h3>
+                        <p>
+                            Are you sure you want to delete this record? This action cannot be undone.
+                        </p>
+                        <div className={styles.modalActions}>
+                            <button 
+                                className={styles.confirmButton} 
+                                onClick={handleDelete} // Confirm and delete the document
+                            >
+                                Yes, Delete
+                            </button>
+                            <button 
+                                className={styles.cancelButton} 
+                                onClick={closeDeleteModal} // Close the modal without deleting
+                            >
+                                Cancel
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}

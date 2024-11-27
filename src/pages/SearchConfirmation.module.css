@@ -372,3 +372,15 @@
 .confirmButton:hover, .cancelButton:hover {
     opacity: 0.9;
 }
+
+.deleteButton{
+    padding: 1rem;
+    background-color: red;
+    border-radius: .5rem;
+    display: flex;
+    color: white;
+    justify-content: center;
+    align-items: center;
+
+    cursor: pointer;
+}
